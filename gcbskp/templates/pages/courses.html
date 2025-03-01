@@ -1,0 +1,116 @@
+{% extends "base_admin.html" %} 
+{% load static i18n compress %} 
+{% block content %}
+<div class="container my-5">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add Courses 
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Course</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'course_group:add_course' %}" method="post">
+            {% csrf_token %}
+            <div class="was-validated">
+              <div class="form-row">
+                <div class="col-6 mb-2">
+                  <select name="program_name" class="form-control" id="validationSample04">
+                    <option value="">Select Program</option>
+                    {% for data in programs %}
+                    <option value="{{ data.id }}">{{ data.heading }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="invalid-feedback">Please select program.</div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-6 mb-2">
+                  <label class="form-label" for="validationSample03">Course Name</label>
+                  <input type="text" class="form-control" id="validationSample03" placeholder="Course Name" name="course_name" required />
+                  <div class="invalid-feedback">Please provide a valid Name.</div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-4">
+  {% if messages %}
+    <div class="alert alert-success">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <table id="coursesTable" class="table table-centered w-100 nowrap" style="border: 1px solid black; mt-2">
+    <thead class="thead-light mt-3"> 
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Program Name</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in courses %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ data.name }}</td>
+        <td>{{ data.program_id.heading }}</td>
+        <td>
+          <a href="#editCourseModal-{{ data.id }}" class="edit" data-bs-toggle="modal">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </a>
+        </td>
+      </tr>
+
+      <!-- Edit Modal -->
+      <div id="editCourseModal-{{ data.id }}" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="{% url 'course_group:update_course' data.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h4 class="modal-title" id="editModalLabel">Edit Course</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Course Name</label>
+                  <input type="text" class="form-control" name="course_name" value="{{ data.name }}" required>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-info">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
+
+{% block inline_javascript %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var table = new DataTable('#coursesTable'); 
+    // Initialize DataTables with vanilla JS
+});
+</script>
+{% endblock inline_javascript %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% load static i18n compress%} {% block content %}
+
+<section class="news py-5 container">
+  <h1 class="heading">
+    <span class="border-bottom border-3 border-main">N</span>ews
+  </h1>
+  <div class="body mt-5">
+    <div class="row row-gap-4 justify-content-around">
+      {% for n in NewsData %}
+      <div class="col-lg-6">
+        <div class="cards py-3 px-4 mx-1">
+          <div class="text-center w-max bg-white rounded-2 float-end">
+            <h5
+              class="bg-second text-white fw-normal py-2 px-4 text-capitalize"
+            >
+              {{ n.created_at|date:"M" }}
+            </h5>
+            <h4 class="pt-2">{{ n.created_at|date:"d" }}</h4>
+            <p>{{ n.created_at|date:"Y" }}</p>
+          </div>
+          <div class="w-50 p-3 mt-5">
+            <h5>
+              <span class="border-bottom border-2"
+                >{{ n.news_heading|slice:":2"|upper }}</span
+              >{{ n.news_heading|slice:"2:"|lower }}
+            </h5>
+          </div>
+          <div><p class="px-3 pt-3">{{ n.news_description|safe }}</p></div>
+          {% if n.news_image %}
+          <a
+            href="{{ n.news_image.url }}"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div class="d-flex justify-content-end">
+              <button class="py-2 px-3 btn rounded btn-warning">
+                View Detail
+              </button>
+            </div>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- college news section end -->
+
+{% endblock content %}

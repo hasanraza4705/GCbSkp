@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static i18n compress%}
+
+{% block content %}
+
+
+
+<section class="merit-list container py-5">
+    <h1 class="heading"> <span class="border-bottom border-3 border-main">Me</span>rit List</h1> 
+
+    <div class="mt-4 row row-gap-5 container"> 
+        {% for meritList in meritLists %}
+            <div class="cards container py-3">
+                <div class="d-flex justify-content-between">
+                    <h2>{{ meritList.title }}</h2>
+                    <div class="w-max text-center bg-white rounded-bottom">
+                        <h3 class="bg-second text-white px-4 py-1">{{ meritList.uploaded_at|date:"M" }}</h3>
+                        <p class="bg-white fs-4" style="line-height: 12px;">{{ meritList.uploaded_at|date:"d" }}</p>
+                        <i class="text-main">{{ meritList.uploaded_at|date:"Y" }}</i>
+                    </div>
+                </div>
+                <a href="{{ meritList.document.url }}" class="nav-link px-3 py-2 bg-main w-max rounded-2 text-white hover-button" download="{{ meritList.file.name }}" target="_blank">Download</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock content %}

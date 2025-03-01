@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static i18n compress %}
+
+{% block content %}
+<section class="program-detail py-2 container">
+    <section class="container py-5 faculty">
+        {% comment %} <h1 class="heading mb-5"> <span class="border-bottom border-3 border-main">In</span>termediate</h1> {% endcomment %}
+        <ul class="nav nav-pills tab border-bottom border-2 pb-1" id="myTab" role="tablist">
+            {% for course_group in course_groups %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ course_group.name|slugify }}-tab" data-bs-toggle="tab" data-bs-target="#{{ course_group.name|slugify }}" type="button" role="tab" aria-controls="{{ course_group.name|slugify }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ course_group.name }}</button>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            {% for course_group in course_groups %}
+            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ course_group.name|slugify }}" role="tabpanel" aria-labelledby="{{ course_group.name|slugify }}-tab">
+                <h1 class="mt-4"> <span class="border-bottom border-3 border-main">{{ course_group.name|slice:":1"|upper }}</span>{{ course_group.name|slice:"1:" }}</h1>
+                <p class="mt-4">{{ course_group.short_description|safe }}</p>
+
+                {% for detail in course_group_details %}
+                {% if detail.coursegroup_id == course_group %}
+                <div>
+                    <h2 class="mt-5 mb-3"><span class="border-bottom border-3 border-main">{{ detail.title|slice:":1"|upper }}</span>{{ detail.title|slice:"1:" }}</h2>
+                    <p>{{ detail.description|safe }}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+               
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</section>
+{% endblock %}

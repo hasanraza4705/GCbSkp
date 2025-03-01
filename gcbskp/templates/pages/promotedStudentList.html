@@ -1,0 +1,755 @@
+{% extends "base_admin.html" %} {% load static i18n compress%} 
+{% block customStyle %}
+
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f4f4f4;
+  }
+  ul {
+    list-style-type: none;
+  }
+</style>
+
+{% endblock customStyle %}
+{% block content %}
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible d-flex justify-content-between align-items-center" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<h2 class="text-center mb-3 mt-3">Student List</h2>
+
+<div class="row" style="overflow:hidden;">
+  <!-- In your template file -->
+  <form method="post" action="{% url 'student-details:generate_merit_list' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-5">
+            <label for="program">Select Program</label>
+            <select name="program_id" id="program" class="form-control">
+                <option value="">Select Program</option>
+                {% for program in programs %}
+                    <option value="{{ program.id }}">{{ program.heading }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-5">
+            <label for="course_groups">Select Course Groups</label>
+            <select id="course_groups" name="course_group_ids" class="form-control" multiple>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="col-2 ">
+            <button type="submit" class="btn btn-success">G. Merit List</button>
+        </div>
+    </div>
+</form>
+
+
+  <div class="col-12 " style="overflow:hidden;">
+    
+      <div class="card">
+          <div class="card-body">
+              <div class="row mb-2">
+                  <div class="col-sm-5">
+                      <h4 class="page-title">Promoted Student List</h4>
+                  </div>
+                  <div class="col-sm-7">
+                      <div class="text-sm-end">
+                          {% comment %} <button type="submit" class="btn btn-success">Promote Selected</button> {% endcomment %}
+                      </div>
+                  </div>
+                  <!-- end col-->
+              </div>
+  
+              <div class="table-responsive mt-1">
+                  <table id="scroll-horizontal-datatable" class="table table-centered w-100 nowrap mt-3">
+                      <thead class="table-light mt-3">
+                          <tr>
+                              {% comment %} <th>
+                                  <input type="checkbox" id="selectAll"> Select All
+                              </th> {% endcomment %}
+                              <th>Student Information</th>
+                              <th>Student Image</th>
+                              {% comment %} <th>Action</th> {% endcomment %}
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for record in page_obj %}
+                          <tr>
+                              {% comment %} <td>
+                                  <input type="checkbox" name="students" value="{{ record.student.id }}" class="student-checkbox">
+                              </td> {% endcomment %}
+                              <td>
+                                  <ul>
+                                      <li><strong>Student Name: </strong>{{ record.student.name }}</li>
+                                      <li><strong>Father's Name: </strong>{{ record.student.father_name }}</li>
+                                      <li><strong>CNIC: </strong>{{ record.student.cnic_no }}</li>
+                                      <li><strong>Date of Birth: </strong>{{ record.student.date_of_birth }}</li>
+                                  </ul>
+                              </td>
+                              <td>
+                                  {% if record.student.photo %}
+                                  <img 
+                                      src="{{ record.student.photo.url }}" 
+                                      alt="{{ record.student.name }}" 
+                                      class="img-fluid" 
+                                      width="100" 
+                                      height="100"
+                                      loading="lazy"
+                                  />
+                                  {% else %}
+                                  <img 
+                                      src="/static/default.jpg" 
+                                      alt="No Image Available" 
+                                      class="img-fluid" 
+                                      width="100" 
+                                      height="100"
+                                      loading="lazy"
+                                  />
+                                  {% endif %}
+                              </td>
+                              {% comment %} <td>
+                                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal-{{ record.student.id }}">Edit</button>
+                              </td> {% endcomment %}
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+  
+              <!-- Pagination -->
+              <div class="d-flex justify-content-between">
+                  <div>
+                      <p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} records</p>
+                  </div>
+                  <div>
+                      <nav aria-label="Page navigation">
+                          <ul class="pagination justify-content-end">
+                              {% if page_obj.has_previous %}
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page=1" aria-label="First">
+                                          <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                  </li>
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                          <span aria-hidden="true">&lsaquo;</span>
+                                      </a>
+                                  </li>
+                              {% else %}
+                                  <li class="page-item disabled">
+                                      <a class="page-link" href="#" aria-label="First">
+                                          <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                  </li>
+                                  <li class="page-item disabled">
+                                      <a class="page-link" href="#" aria-label="Previous">
+                                          <span aria-hidden="true">&lsaquo;</span>
+                                      </a>
+                                  </li>
+                              {% endif %}
+  
+                              {% for num in page_obj.paginator.page_range %}
+                                  {% if page_obj.number == num %}
+                                      <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                  {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                                      <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                  {% endif %}
+                              {% endfor %}
+  
+                              {% if page_obj.has_next %}
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                          <span aria-hidden="true">&rsaquo;</span>
+                                      </a>
+                                  </li>
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                          <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                  </li>
+                              {% else %}
+                                  <li class="page-item disabled">
+                                      <a class="page-link" href="#" aria-label="Next">
+                                          <span aria-hidden="true">&rsaquo;</span>
+                                      </a>
+                                  </li>
+                                  <li class="page-item disabled">
+                                      <a class="page-link" href="#" aria-label="Last">
+                                          <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                  </li>
+                              {% endif %}
+                          </ul>
+                      </nav>
+                  </div>
+              </div>
+          </div> <!-- end card-body-->
+      </div> <!-- end card-->
+  
+  
+  
+  </div> <!-- end col -->
+</div>
+
+
+
+
+<!-- Edit Student Modal -->
+{% for record in student_records %}
+<div
+  class="modal fade"
+  id="editStudentModal-{{ record.student.id }}"
+  tabindex="-1"
+  aria-labelledby="editStudentModalLabel-{{ record.student.id }}"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5
+          class="modal-title"
+          id="editStudentModalLabel-{{ record.student.id }}"
+        >
+          Edit Student
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          method="post"
+          action="{% url 'student-details:update_student' record.student.id %}"
+        >
+          {% csrf_token %}
+          <div class="row mb-3">
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Student Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="name"
+              value="{{ record.student.name }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Student Mobile No</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_modile_no"
+              value="{{ record.student.mobile_no }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Student CNIC</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_cnic"
+              value="{{ record.student.cnic_no }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Student DOB</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_dob"
+              value="{{ record.student.date_of_birth }}"
+            />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Father Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_father_name"
+              value="{{ record.student.father_name }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Father CNIC</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="father_cnic"
+              value="{{ record.student.father_cnic }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >F. Mobile No</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_cnic"
+              value="{{ record.student.father_mobile_no }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Father Occupation</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="father_occputaion"
+              value="{{ record.student.father_occupation }}"
+            />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Guardian Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="guardian_name"
+              value="{{ record.student.guardian_name }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Guardian Mobile No</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_guardian_no"
+              value="{{ record.student.guardian_contact_no }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Guardian CNIC</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_duardian_cnic"
+              value="{{ record.student.guardian_cnic }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Nationality</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_nationality"
+              value="{{ record.student.nationality }}"
+            />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Religion</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="religion"
+              value="{{ record.student.religion }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Gender</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="std_gender"
+              value="{{ record.student.gender }}"
+            />
+            </div>
+            <div class="col-3">
+              <label for="studentHafiz-{{ record.student.id }}" class="form-label">Hafiz-e-Quran</label>
+              <select class="form-control" id="studentHafiz-{{ record.student.id }}" name="hafiz_e_quran">
+                <option value="true" {% if record.student.hafiz_e_quran %}selected{% endif %}>Yes</option>
+                <option value="false" {% if not record.student.hafiz_e_quran %}selected{% endif %}>No</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Martial Status</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="marital_status"
+              value="{{ record.student.marital_status }}"
+            />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Blood Group</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="blood_group"
+              value="{{ record.student.blood_group }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Worker Relation</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="worker_relation"
+              value="{{ record.student.worker_relation }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Worker Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="worker_name"
+              value="{{ record.student.worker_name }}"
+            />
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Worker Department</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="worker_department"
+              value="{{ record.student.worker_department }}"
+            />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-3">
+              <label for="disabilityStatus-{{ record.student.id }}" class="form-label">Disability Status</label>
+              <select class="form-control" id="disabilityStatus-{{ record.student.id }}" name="disability_status">
+                <option value="false" {% if not record.student.disability_status %} selected {% endif %}>No</option>
+                <option value="true" {% if record.student.disability_status %} selected {% endif %}>Yes</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Permanent Address</label
+            >
+            <textarea class="form-control"
+          id="studentName-{{ record.student.id }}"
+          name="permanent_address">{{ record.student.permanent_address }}</textarea>
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >Postal Address</label
+            >
+            <textarea class="form-control"
+            id="studentName-{{ record.student.id }}"
+            name="postal_address"
+            >{{ record.student.postal_address }}</textarea>
+            </div>
+            <div class="col-3">
+              <label
+              for="studentName-{{ record.student.id }}"
+              class="form-label"
+              >District</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="studentName-{{ record.student.id }}"
+              name="district"
+              value="{{ record.student.district }}"
+            />
+            </div>
+          </div>
+          
+          {% for data in record.form_data %}
+          <h4>Academic Record</h4>
+            <div class="row mb-3">
+              <div class="col-3">
+                <div class="mb-3">
+                  <label for="formDataClassName-{{ data.id }}" class="form-label">Class Name</label>
+                  <input type="text" class="form-control" id="formDataClassName-{{ data.id }}" name="form_data_{{ data.id }}_class_name" value="{{ data.class_name }}" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-3">
+                  <label for="formDataYear-{{ data.id }}" class="form-label">Year</label>
+                  <input type="text" class="form-control" id="formDataYear-{{ data.id }}" name="form_data_{{ data.id }}_year" value="{{ data.year }}" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-3">
+                  <label for="formDataBoard-{{ data.id }}" class="form-label">Board</label>
+                  <input type="text" class="form-control" id="formDataBoard-{{ data.id }}" name="form_data_{{ data.id }}_board" value="{{ data.board }}" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-3">
+                  <label for="formDataObtainMarks-{{ data.id }}" class="form-label">Obtain Marks</label>
+                  <input type="text" class="form-control" id="formDataObtainMarks-{{ data.id }}" name="form_data_{{ data.id }}_obtain_marks" value="{{ data.obtain_marks }}" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-3">
+                  <label for="formDataPercentage-{{ data.id }}" class="form-label">Percentage</label>
+                  <input type="text" class="form-control" id="formDataPercentage-{{ data.id }}" name="form_data_{{ data.id }}_percentage" value="{{ data.percentage }}" />
+                </div>
+              </div>
+            </div>
+            <h5>Subjects for {{ data.class_name }}</h5>
+            {% for item in record.form_data_subjects %}
+              {% if item.form_data.id == data.id %}
+              {% for subject in item.subjects %}
+              <div class="row mb-3">
+                <div class="col-3">
+                  <div class="mb-3">
+                    <label for="subjectName-{{ subject.id }}" class="form-label">Subject Name</label>
+                    <input type="text" class="form-control" id="subjectName-{{ subject.id }}" name="subject_{{ subject.id }}_name" value="{{ subject.subject_name }}" />
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="mb-3">
+                    <label for="subjectObtainMarks-{{ subject.id }}" class="form-label">Obtain Marks</label>
+                    <input type="text" class="form-control" id="subjectObtainMarks-{{ subject.id }}" name="subject_{{ subject.id }}_obtain_marks" value="{{ subject.obtain_marks }}" />
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="mb-3">
+                    <label for="subjectTotalMarks-{{ subject.id }}" class="form-label">Total Marks</label>
+                    <input type="text" class="form-control" id="subjectTotalMarks-{{ subject.id }}" name="subject_{{ subject.id }}_total_marks" value="{{ subject.total_marks }}" />
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+              {% endif %}
+            {% endfor %}
+            
+  {% endfor %}
+
+        
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock content %}
+
+{% block inline_javascript %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var table = document.querySelector("#scroll-horizontal-datatable");
+
+    if (table) {
+        new DataTable(table, {
+            scrollX: true,
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'></i>",
+                    next: "<i class='mdi mdi-chevron-right'></i>"
+                }
+            },
+            paging: false,  // Disable pagination
+            info: false,    // Disable showing entries info
+            dom: 'ft',      // Show only the search bar (filter) and table
+            drawCallback: function() {
+                var pagination = document.querySelector(".dataTables_paginate .pagination");
+                if (pagination) {
+                    pagination.classList.add("pagination-rounded");
+                }
+            }
+        });
+    }
+
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const studentCheckboxes = document.querySelectorAll('.student-checkbox');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function () {
+            studentCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        studentCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                if (!checkbox.checked) {
+                    selectAllCheckbox.checked = false;
+                } else if (Array.from(studentCheckboxes).every(cb => cb.checked)) {
+                    selectAllCheckbox.checked = true;
+                }
+            });
+        });
+    } else {
+        console.error('Select All checkbox not found!');
+    }
+
+    const programSelect = document.getElementById('program');
+    const courseGroupSelect = document.getElementById('course_groups');
+
+    if (programSelect && courseGroupSelect) {
+        programSelect.addEventListener('change', function() {
+            const programId = this.value;
+            console.log("Program selected:", programId);
+
+            if (programId) {
+                fetch(`/online_admission/get_course_groups/${programId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Received data:", data);  // Check the structure of received data
+          
+                        // Access the 'course_groups' array inside the received data
+                        if (data.course_groups && Array.isArray(data.course_groups)) {
+                            courseGroupSelect.innerHTML = ''; // Clear previous options
+          
+                            data.course_groups.forEach(group => {
+                                const option = document.createElement('option');
+                                option.value = group.id;
+                                option.textContent = group.name;
+                                courseGroupSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('course_groups is not an array or missing:', data);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching course groups:', error));
+            } else {
+                courseGroupSelect.innerHTML = ''; // Clear options if no program is selected
+            }
+        });
+    } else {
+        console.error('Program or Course Group select element not found!');
+    }
+}); // Closing DOMContentLoaded event listener
+
+
+
+
+
+</script>
+{% endblock inline_javascript %}
+
+

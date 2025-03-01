@@ -1,0 +1,249 @@
+{% load static i18n compress %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} GCB_SKP {% endblock title %}</title>
+    {% compress css %}
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    {% endcompress %} 
+    {% block css %}
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        section{
+            width: 777px;
+            height: 1018px;
+            margin: 20px;
+            position: relative;
+            
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 400px;
+            overflow: hidden;
+        }
+        h1{
+            text-align: center;
+            text-decoration: underline;
+            color: rgb(63, 62, 62);
+        }
+        .group-xl,.group-lg,.group-md,.group-sm,.group-xs{
+
+            display: flex;
+            /* align-items: center; */
+            gap: 5px;
+        }
+        .group-xl{
+            width: 100%;
+        }
+        .group-lg{
+            width: 66%;
+        }
+        .group-md{
+            width: 48%;
+        }
+        .group-sm{
+            width: 32%;
+        }
+        .group-xs{
+            width: 23%;
+
+        }
+        span{
+            border-bottom: 1px solid;
+            flex-grow: 1;
+            text-transform: capitalize;
+            padding-left: 5px;
+            font-size: 14px;
+        }
+        p{
+            /* font-size: 18px; */
+            font-weight: 600;
+            text-transform: capitalize;
+
+        }
+        .class-detail{
+            margin-top: 20px;
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .class-detail .content {
+            width: 500px;
+            display: flex;
+            flex-wrap: wrap;
+            gap:15px;
+        }
+        .class-detail .student-img img{
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .about-student,.student-contact,.previous-school,.office-use{
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 15px;
+        }
+        h3{
+            margin-top: 30px;
+            text-decoration: underline;
+        }
+        .student-contact,.previous-school{
+            padding:20px  0px;
+            border-bottom:  1px dashed;
+            margin-top: 0;
+
+        }
+
+        h1:nth-child(6),h1:nth-child(8){
+            margin-top: 10px ;
+            text-decoration: none;
+        }
+        .office-use{
+            margin-top: 20px;
+        }
+        .footer{
+            position: absolute;
+            bottom: 0;
+            border-top: 1px solid gray;
+            width: 100%;
+            padding:10px;
+        }
+        .footer div{
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .footer img{
+            width: 20px;
+            height: 20px;
+        }
+
+
+    </style>
+    {% endblock css %}
+</head>
+<body>
+
+  
+  
+  <div class="container-fluid page__container">
+    <h1 class="h2">Student Profile</h1>
+    <div class="card card-body bg-light">
+      <div class="row">
+        <div class="col-lg-12">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display non-field errors -->
+            {{ form.non_field_errors }}
+  
+            <div class="row g-3">
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.registration_no.label_tag }} {{ form.registration_no }} {{ form.registration_no.errors }}
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.cnic_bform.label_tag }} {{ form.cnic_bform }} {{ form.cnic_bform.errors }}
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.photo.label_tag }} {{ form.photo }} {{ form.photo.errors }}
+              </div>
+            </div>
+  
+            <!-- Additional rows -->
+            <div class="row g-3">
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }} {{ form.date_of_birth.errors }}
+              </div>
+              <div class="col-12 col-md-3 mb-3">
+                {{ form.mobile_no.label_tag }} {{ form.mobile_no }} {{ form.mobile_no.errors }}
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                {{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}
+              </div>
+            </div>
+  
+            <!-- Other form fields -->
+  
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- New Section for Admission Form -->
+  
+  <section>
+    <h1>Admission Form</h1>
+    <div class="group-xl">
+      <p>Full Name:</p> <span>{{ form.full_name.value }}</span>
+    </div>
+    <div class="group-md">
+      <p>CNIC:</p> <span>{{ form.cnic.value }}</span>
+    </div>
+    <div class="group-md">
+      <p>Date of Birth:</p> <span>{{ form.date_of_birth.value }}</span>
+    </div>
+    <div class="class-detail">
+      <div class="content">
+        <div class="group-xs">
+          <p>Gender:</p> <span>{{ form.gender.value }}</span>
+        </div>
+        <div class="group-xs">
+          <p>Nationality:</p> <span>{{ form.nationality.value }}</span>
+        </div>
+      </div>
+      <div class="student-img">
+        <img src="{{ form.photo.url }}" alt="Student Photo">
+      </div>
+    </div>
+  
+    <div class="about-student">
+      <div class="group-xl">
+        <p>Father's Name:</p> <span>{{ form.father_name.value }}</span>
+      </div>
+      <div class="group-md">
+        <p>Father's CNIC:</p> <span>{{ form.father_cnic.value }}</span>
+      </div>
+      <div class="group-md">
+        <p>Father's Contact:</p> <span>{{ form.father_mobile_no.value }}</span>
+      </div>
+    </div>
+  
+    <div class="previous-school">
+      <h3>Previous School Information</h3>
+      <div class="group-xl">
+        <p>Last School Attended:</p> <span>{{ form.previous_school_name.value }}</span>
+      </div>
+    </div>
+  
+    <div class="office-use">
+      <h3>For Office Use Only</h3>
+      <div class="group-md">
+        <p>Remarks:</p> <span>{{ form.office_remarks.value }}</span>
+      </div>
+    </div>
+  
+    <div class="footer">
+      <p>Signature:</p> <span>__________________</span>
+    </div>
+  </section>
+  
+  
+</body>
+</html>

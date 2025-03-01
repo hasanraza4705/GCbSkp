@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static i18n compress %}
+
+{% block content %}
+<section class="container py-4">
+    <h1 class="heading"><span class="border-bottom border-3 border-main">Do</span>wnload</h1>
+
+    {% for category, items in download_categories.items %}
+        <div class="container">
+            <h3 class="mt-3"><span class="border-bottom border-3 border-main">{{ category }}</span></h3>
+            <ul class="mt-4 fs-5">
+                {% for item in items %}
+                    <li>
+                        <a href="{{ item.file.url }}" target="_blank" download="{{ item.file.name }}" style="text-decoration: none;">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

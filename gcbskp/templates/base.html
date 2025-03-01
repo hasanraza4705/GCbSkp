@@ -1,0 +1,409 @@
+{% load static i18n compress%}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>{% block title %} GCB_SKP {% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="colg website" />
+    <meta name="author" content="Memoona" />
+    <link rel="icon" href="{% static 'images/favicons/mini-logo.png' %}" />
+    {% block css %}
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
+    <link rel="icon" href="images/mini-logo.png" type="image/icon type" />
+
+    <!-- Your stuff: Third-party CSS libraries go here -->
+    <!-- This file stores project-specific CSS -->
+
+    {% compress css %}
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    {% endcompress %} {% endblock css %}
+  </head>
+  <body class="{% block bodyclass %}{% endblock bodyclass %}">
+    {% block body %}
+    <div class="mb-1">
+      <nav class="px-md-4 navbar navbar-expand-lg bg-light shadow-sm">
+        <div class="container-fluid">
+          {% if colg_logo %}
+            <a class="navbar-brand" href="{% url 'home:sliderData' %}">
+                <img src="/media/{{ colg_logo.first.colg_logo }}" alt="College Logo" />
+            </a>
+        {% endif %}
+          <button
+            class="navbar-toggler border-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="collapse navbar-collapse justify-content-end"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{% url 'home:sliderData' %}"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-dark"
+                  href="#"
+                  id="ScrollingDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+
+                >
+                  Acadmics
+                </a>
+                <ul
+                  class="dropdown-menu"
+                  aria-labelledby="ScrollingDropdown"
+                >
+                  {% for program in ProgramData %}
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'offered_program:program_detail' program.pk %}"
+                      >{{ program.heading }}</a
+                    >
+                  </li>
+
+                  {% endfor%}
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'teacher_view' %}"
+                      >Teachers</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-dark"
+                  href="#"
+                  id="navbarScrollingDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Admission
+                </a>
+                <ul
+                  class="dropdown-menu"
+                  aria-labelledby="navbarScrollingDropdown"
+                >
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'apply-details:ApplyDetails' %}"
+                      >How Apply Online</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'admission-details:AdmissionDetails' %}"
+                      >Admission Policy</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'merit-list:merit_list_view' %}"
+                      >Merit Lists</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'admission-schedule:admissionSchedule' %}"
+                      >Admission Schedule</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{% url 'download:download' %}"
+                  >Downloads</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{% url 'about:AboutDetails' %}"
+                  >About Us</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{% url 'events:EventDetails' %}"
+                  >Events</a
+                >
+              </li>
+
+              <ul class="navbar-nav">
+                {% if auth_user %}
+                <li class="nav-item">
+                  <a
+                    class="nav-link btn btn-primary p-md-2 mt-2 text-white mx-md-3"
+                    href="{% url 'student-registration:profile' %}"
+                    >Profile</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link btn btn-primary text-white  mt-2 p-md-2 mx-md-3"
+                    href="{% url 'student-registration:logout' %}"
+                    >Logout</a
+                  >
+                </li>
+                {% for status in admissionStatus %}
+                {% if status.status == 'Active' %}
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link btn btn-primary text-white p-md-2 mx-md-3"
+                           href="{% url 'online_admission:apply_view' %}">Apply</a>
+                    </li> {% endcomment %}
+                {% endif %}
+            {% endfor %}
+                {% else %}
+                {% comment %} <li class="nav-item">
+                  <a
+                    class="nav-link btn btn-primary text-white p-md-2 mx-md-3"
+                    href="{% url 'student-registration:login_view' %}"
+                    >Login</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link btn btn-primary text-white p-md-2 mx-3"
+                    href="{% url 'student-registration:register' %}"
+                    >Register</a
+                  >
+                </li> {% endcomment %}
+
+                {% endif %}
+              </ul>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    {% comment %}
+    <div class="container">
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endcomment %} {% block main %} 
+      {% block content %} {% endblock content %} {% endblock main %} {% comment %}
+    </div>
+    {% endcomment %} {% block footer %}
+    <footer class="pt-5 pb-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md about-col col-sm-12">
+            <a href="{% url 'home:sliderData' %}"
+              ><img src="{% static 'images/college-logo-white.png' %}" alt=""
+            /></a>
+            <ul class="list-unstyled fs-6 text-white mt-3 text-nowrap">
+              <li>
+                <i class="fas fa-location-dot text-main"></i>Civil Lines,
+                Sheikhupura
+              </li>
+              <li>
+                <i class="fa-solid fa-envelope text-main"></i
+                >gcbsheikhupura@gmail.com
+              </li>
+              <li><i class="fa-solid fa-phone text-main"></i> (056) 3783030</li>
+              <li class="social-links">
+                <ul class="">
+                  <li class="">
+                    <a href="http://www.facebook.com/gcbskp" target="_blank"
+                      ><i class="fa-brands fa-facebook-f"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="http://www.instagram.com/gcbskp" target="_blank"
+                      ><i class="fa-brands fa-instagram"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="http://www.twitter.com/gcbskp" target="_blank"
+                      ><i class="fa-brands fa-twitter"></i
+                    ></a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="col">
+            <ul class="text-capitalize nav d-block">
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'home:sliderData' %}"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'apply-details:ApplyDetails' %}"
+                  >how apply Online</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'admission-details:AdmissionDetails' %}"
+                  >admission Policy</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'merit-list:merit_list_view' %}"
+                  >merit list</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'admission-schedule:admissionSchedule' %}"
+                  >admission schedule</a
+                >
+              </li>
+              <li>
+                <a class="nav-link text-white" href="{% url 'teacher_view' %}"
+                  >teachers</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'events:EventDetails' %}"
+                  >events</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'about:AboutDetails' %}"
+                  >about us</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col">
+            <ul class="text-capitalize nav d-block">
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'download:download' %}"
+                  >E-Prospectus</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'download:download' %}"
+                  >timetable</a
+                >
+              </li>
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'download:download' %}"
+                  >date sheet</a
+                >
+              </li>
+              {% for program in ProgramData %}
+              <li>
+                <a
+                  class="nav-link text-white"
+                  href="{% url 'offered_program:program_detail' program.pk %}"
+                  >{{ program.heading }}</a
+                >
+              </li>
+
+              {% endfor%}
+            </ul>
+          </div>
+        </div>
+        <div>
+          <hr class="border-main border-2" />
+          <p class="text-white text-center">
+            © Copyright 2021 Government Graduate College, Civil Lines,
+            Sheikhupura - All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    {% endblock footer%} {% endblock body %}
+    <!-- /container -->
+    {% block modal %} {% endblock modal %} {% block inline_javascript %}
+    {% comment %} Script tags with only code, no src (defer by default). To run
+    with a "defer" so that you run inline code:
+  
+    {% endcomment %} {% endblock inline_javascript %}
+
+    <!-- Le javascript
+    ================================================== -->
+    {# Placed at the top of the document so pages load faster with defer #} {% block javascript %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <!-- Your stuff: Third-party javascript libraries go here -->
+
+    <!-- place project specific Javascript in this file -->
+
+    {% compress js %}
+    <script defer src="{% static 'js/project.js' %}"></script>
+    <script>
+     $(document).ready(function() {
+     {% if popUpData %}
+       // Show the modal for each entry
+       $('#exampleModal').modal('show');
+     {% endif %}
+  });
+  </script>
+    {% endcompress %} {% endblock javascript %}
+  </body>
+</html>

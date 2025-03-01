@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5; /* Change the background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .register-container {
+            background: white;
+            padding: 20px 20px 10px; 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          
+        }
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 10px; 
+        }
+        .register-container #button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .register-container #button:hover {
+            background-color: #0056b3;
+        }
+        #djDebugToolbarHandle{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4 d-flex justify-content-center">
+        <div class="register-container">
+            <h2 class="mb-2">Register</h2>
+            <div class="error"></div>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.Name.label_tag }}
+                            {{ form.Name }}
+                            {% if form.Name.errors %}
+                        <div class="text-danger">{{ form.Name.errors|striptags }}</div>
+                    {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.cnic_no.label_tag }}
+                            {{ form.cnic_no }}
+                            {% if form.cnic_no.errors %}
+                            <div class="text-danger">{{ form.cnic_no.errors|striptags }}</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                </div>
+        
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                            <div class="text-danger">{{ form.email.errors|striptags }}</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.confirm_email.label_tag }}
+                            {{ form.confirm_email }}
+                            {% if form.confirm_email.errors %}
+                            <div class="text-danger">{{ form.confirm_email.errors|striptags }}</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                 
+                </div>
+        
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                        <div class="text-danger">{{ form.password.errors|striptags }}</div>
+                    {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-group">
+                            {{ form.confirmPassword.label_tag }}
+                            {{ form.confirmPassword }}
+                            {% if form.confirmPassword.errors %}
+                            <div class="text-danger">{{ form.confirmPassword.errors|striptags }}</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block" id="button">Register</button>
+                    </div>
+                    
+                </div>
+        
+               
+            </form>
+
+            <div class="row">
+                <div class="col-12">
+                    <a href="{% url 'student-registration:login_view' %}" class="btn btn-secondary btn-block mt-3" > Aleardy Register</a>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+  const cnicInput = document.getElementById('id_cnic_no');
+  console.log(cnicInput);
+
+  function formatCnic(cnicInput) {
+    inputElement.addEventListener('input', function(e) {
+        let input = e.target.value;
+        
+        // Remove non-digit characters (just in case someone pastes a non-digit character)
+        input = input.replace(/\D/g, '');
+        
+        // Add dashes after 5 and 13 characters
+        if (input.length > 5 && input.length <= 13) {
+            input = input.slice(0, 5) + '-' + input.slice(5);
+        }
+        if (input.length > 13) {
+            input = input.slice(0, 13) + '-' + input.slice(13, 15);
+        }
+
+        // Set the formatted value back to the input field
+        e.target.value = input;
+    });
+}
+
+document.getElementById('id_cnic_no').addEventListener('input', function(e) {
+    let input = e.target.value;
+    
+    // Remove non-digit characters (just in case someone pastes a non-digit character)
+    input = input.replace(/\D/g, '');
+    
+    // Add dashes after 5 and 13 characters
+    if (input.length > 5 && input.length <= 13) {
+        input = input.slice(0, 5) + '-' + input.slice(5);
+    }
+    if (input.length > 13) {
+        input = input.slice(0, 13) + '-' + input.slice(13, 15);
+    }
+
+    // Set the formatted value back to the input field
+    e.target.value = input;
+});
+});
+      </script>
+</body>
+</html>

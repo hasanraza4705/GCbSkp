@@ -1,0 +1,10 @@
+{% extends "base_admin.html" %}
+{% block content %}
+<h1>Template Loaded</h1>
+{{ "Data Loaded" }}
+{% for data in programData %}
+    <p>{{ data.heading }}</p>
+{% empty %}
+    <p>No Programs Available</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static i18n compress %}
+
+{% block content %}
+
+<section class="container py-5">
+    <h1 class="heading"> <span class="border-bottom border-3 border-main">Te</span>achers</h1>
+    <div class="container faculty">
+        <!-- <pre>{{ teachers_less_equal_two }}</pre> -->
+        {% for department, teachers in teachers_less_equal_two %}
+           
+                <div class="row" style="justify-content: center;">
+                    {% for teacher in teachers %}
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="cards-content mt-4">
+                            <img src="{% if teacher.image %} {{ teacher.image.url }}  {% else %} {% static 'images/images.jpg' %} {% endif %}" alt="{{ teacher.name }}">
+                            <div class="card-details text-white text-center py-3">
+                                <p class="fs-4 text-capitalize">{{ teacher.name }}</p>
+                                <i class="fw-light text-main">{{ teacher.designation }}</i>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+        {% endfor %}
+    
+
+    <div>
+        <!-- <h1>dsf</h1> -->
+        <!-- <pre>{{ teachers_greater_three }}</pre> -->
+        {% for department, teachers in teachers_greater_three %}
+      
+            <h1>{{ department.dept_name }}</h1>
+            <div class="d-flex justify-content-center ">
+                <div class="row" >
+                    <!-- print() -->
+                    {% for teacher in teachers %}
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="cards-content mt-4">
+                            <img src="{% if teacher.image %} {{ teacher.image.url }}  {% else %} {% static 'images/images.jpg' %}  {% endif %}" alt="{{ teacher.name }}">
+                            <div class="card-details text-white text-center py-3">
+                                <p class="fs-4 text-capitalize">{{ teacher.name }}</p>
+                                <i class="fw-light text-main">{{ teacher.designation }}</i>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+    
+</section>
+
+{% endblock %}

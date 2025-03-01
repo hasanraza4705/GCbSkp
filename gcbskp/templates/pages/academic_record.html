@@ -1,0 +1,458 @@
+{% extends "base.html" %} {% load static i18n compress %} {% block content %}
+<div class="container px-5">
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} alert-dismissible d-flex justify-content-between align-items-center"
+      role="alert"
+    >
+      <span>{{ message }}</span>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<div class="container my-5">
+  <!-- Button trigger modal -->
+  <div class="row">
+    <div class="col-md-4">
+      <button
+        type="button"
+        class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#subjectmodel"
+      >
+        Add Acedmic Record
+      </button>
+    </div>
+    <div class="col-md-2">
+      <form action="{% url 'online_admission:apply_form' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Next</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Class Name</th>
+        <th scope="col">Year</th>
+        <th scope="col">Board</th>
+        <th scope="col">Obtain Marks</th>
+        <th scope="col">Total Marks</th>
+        <th scope="col">Grade</th>
+        {% comment %}
+        <th scope="col">Action</th>
+        {% endcomment %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in formData %}
+      <tr>
+        <th scope="row">{{ data.id }}</th>
+        <td>{{ data.class_name }}</td>
+        <td>{{ data.year }}</td>
+        <td>{{ data.board }}</td>
+        <td>{{ data.obtain_marks }}</td>
+        <td>{{ data.total_marks }}</td>
+        <td>{{ data.grade }}</td>
+
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div
+  class="modal fade"
+  id="subjectmodel"
+  tabindex="-1"
+  aria-labelledby="subjectmodel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subjectmodel">Add Academic Record</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'student-details:AddData' %}" method="post">
+          {% csrf_token %}
+          <div class="">
+            <div class="row">
+              <div class="col mb-3">
+                <label class="form-label" for="selectType">Degree Type</label>
+                <select class="form-control" id="selectType" name="type">
+                  <option selected disabled>--Select Type--</option>
+                  <option value="matric">Matric</option>
+                  <option value="inter">Intermediate</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="matricOptions" class="form-group d-none">
+              <div class="row">
+                <div class="col mb-3">
+                  <label class="form-label" for="matricStream">Matric </label>
+                  <select
+                    class="form-control"
+                    id="matricStream"
+                    name="matric_stream"
+                  >
+                    <option selected disabled>--Select Type--</option>
+                    <option value="Matric Science">Matric Science</option>
+                    <option value="Matric Arts">Matric Arts</option>
+                    <option value="O Level">O Level</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="interOptions" class="form-group d-none">
+              <div class="row">
+                <div class="col mb-3">
+                  <label class="form-label" for="interStream"
+                    >Intermediate</label
+                  >
+                  <select
+                    class="form-control"
+                    id="interStream"
+                    name="generic_class_name"
+                  >
+                    <option selected disabled>--Select Type--</option>
+                    <option value="ICS">ICS</option>
+                    <option value="FSC Pre Engineering">
+                      FSC Pre Engineering
+                    </option>
+                    <option value="FSC Pre Medical">FSC Pre Medical</option>
+                    <option value="FA">FA</option>
+                    <option value="FAIT">FAIT</option>
+                    <option value="A Level">A Level</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="genericInput" class="form-group d-none">
+              <div class="row">
+                <div class="col mb-3">
+                  <label class="form-label" for="className">Class</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="className"
+                    placeholder="Class"
+                    name="name"
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Class.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col mb-3">
+                  <label class="form-label" for="grade-div">Grade / CGPA</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="grade-div"
+                    placeholder="Grade / CGPA"
+                    name="cgpa"
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid grade.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col mb-3">
+                  <label class="form-label" for="percentage">Percentage</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="percentage"
+                    placeholder="Percentage"
+                    name="percentage"
+                    value="0.0"
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Percentage.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col mb-3">
+                <label class="form-label" for="year">Year</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="year"
+                  placeholder="Year"
+                  name="year"
+                  required
+                />
+                <div class="invalid-feedback">Please provide a valid Year.</div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+              <div class="col mb-3">
+                <label class="form-label" for="board">Board</label>
+                <select
+                  class="form-control"
+                  name="board"
+                  id="boardSelect"
+                  onchange="showOtherBoardField()"
+                >
+                  <option value="">Select Board</option>
+                  <!-- Federal -->
+                  <option
+                    value="Federal BISE of Intermediate and Secondary Education"
+                  >
+                    Federal BISE of Intermediate and Secondary Education
+                  </option>
+                  <!-- Punjab -->
+                  <option value="Bahawalpur BISE">Bahawalpur BISE</option>
+                  <option value="Dera Ghazi Khan BISE">
+                    Dera Ghazi Khan BISE
+                  </option>
+                  <option value="Faisalabad BISE">
+                    Faisalabad BISE 
+                  </option>
+                  <option value="Gujranwala BISE">Gujranwala BISE</option>
+                  <option value="Lahore BISE">Lahore BISE</option>
+                  <option value="Multan BISE">Multan BISE</option>
+                  <option value="Rawalpindi BISE">Rawalpindi BISE</option>
+                  <option value="Sahiwal BISE">Sahiwal BISE</option>
+                  <option value="Sargodha BISE">Sargodha BISE</option>
+                  <!-- Sindh -->
+                  <option value="Hyderabad BISE">Hyderabad BISE</option>
+                  <option value="Karachi Intermediate BISE">
+                    Karachi Intermediate BISE
+                  </option>
+                  <option value="Karachi Secondary BISE">
+                    Karachi Secondary BISE
+                  </option>
+                  <option value="Larkana BISE">Larkana BISE</option>
+                  <option value="Mirpur Khas BISE">Mirpur Khas BISE</option>
+                  <option value="Sukkur BISE">Sukkur BISE</option>
+                  <option value="Shaheed Benazirabad BISE">
+                    Shaheed Benazirabad BISE
+                  </option>
+                  <!-- Khyber Pakhtunkhwa -->
+                  <option value="Abbottabad BISE">Abbottabad BISE</option>
+                  <option value="Bannu BISE">Bannu BISE</option>
+                  <option value="Dera Ismail Khan BISE">
+                    Dera Ismail Khan BISE
+                  </option>
+                  <option value="Kohat BISE">Kohat BISE</option>
+                  <option value="Malakand BISE">Malakand BISE</option>
+                  <option value="Mardan BISE">Mardan BISE</option>
+                  <option value="Peshawar BISE">Peshawar BISE</option>
+                  <option value="Swat BISE">Swat BISE</option>
+                  <!-- Balochistan -->
+                  <option value="Quetta BISE">Quetta BISE</option>
+                  <option value="Khuzdar BISE">Khuzdar BISE</option>
+                  <option value="Turbat BISE">Turbat BISE</option>
+                  <option value="Loralai BISE">Loralai BISE</option>
+                  <!-- Azad Jammu and Kashmir -->
+                  <option value="Mirpur BISE">Mirpur BISE</option>
+                  <option value="other_board">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col mb-3">
+                <div id="otherBoardField" style="display: none">
+                  <label for="otherBoard" class="form-label"
+                    >Board Name</label
+                  >
+                  <input
+                    type="text"
+                    id="otherBoard"
+                    class="form-control"
+                    name="otherBoard"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col mb-3">
+                <small class="text-danger d-none" id="marks_note"
+                  >Enter marks based on marks provided board.</small
+                >
+                <br />
+                <label class="form-label" for="obtainMarks">Obtain Marks</label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="obtainMarks"
+                  placeholder="Obtain Marks"
+                  name="obtain_marks"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please provide a valid Obtain Marks.
+                </div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+              <div class="col mb-3">
+                <small class="text-danger d-none" id="marks_note_total"
+                  >Enter marks based on marks provided board.</small
+                >
+                <br />
+                <label class="form-label text-danger" for="totalMarks">Total Marks</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="totalMarks"
+                  placeholder="Total Marks"
+                  name="total_marks"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please provide a valid Total Marks.
+                </div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+            </div>
+            <div id="inputGeneral">
+              <div class="row">
+                <div class="col mb-3">
+                  <label class="form-label" for="grade">Grade</label>
+                  <select class="form-control" id="grade" name="grade">
+                    <option value="" selected disabled>--Select--</option>
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="B+">B+</option>
+                    <option value="C">C</option>
+                    <option value="C+">C+</option>
+                    <option value="D">D</option>
+                    <option value="D+">D+</option>
+                    <option value="E">E</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please provide a valid Grade.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                {% comment %} <div class="col mb-3">
+                  <label class="form-label" for="percentage">Percentage</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="percentage"
+                    placeholder="Percentage"
+                    name="percentage"
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Percentage.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div> {% endcomment %}
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block inline_javascript %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var table = new DataTable("#programTable");
+  });
+
+  const selectType = document.getElementById("selectType");
+  const matricOptions = document.getElementById("matricOptions");
+  const interOptions = document.getElementById("interOptions");
+  const genericInput = document.getElementById("genericInput");
+  const generalInput = document.getElementById("inputGeneral");
+  var matricStream = document.getElementById("matricStream");
+  var interStream = document.getElementById("interStream");
+  const marksNote = document.getElementById("marks_note");
+  const marks_note_total = document.getElementById("marks_note_total");
+
+  // Event listener for matric stream change
+  matricStream.addEventListener("change", function () {
+    if (matricStream.value === "O Level") {
+      matricOptions.classList.remove("d-none");
+      marksNote.classList.remove("d-none");
+      marks_note_total.classList.remove("d-none");
+    } else {
+      matricOptions.classList.add("d-none");
+      marks_note_total.classList.add("d-none");
+      marksNote.classList.add("d-none");
+    }
+  });
+
+  // Event listener for intermediate stream change
+  interStream.addEventListener("change", function () {
+    if (interStream.value === "A Level") {
+      interOptions.classList.remove("d-none");
+      marksNote.classList.remove("d-none");
+      marks_note_total.classList.remove("d-none");
+    } else {
+      interOptions.classList.add("d-none");
+      marksNote.classList.add("d-none");
+      marks_note_total.classList.add("d-none");
+    }
+  });
+  selectType.addEventListener("change", () => {
+    const selectedValue = selectType.value;
+
+    // Hide all options initially
+    matricOptions.classList.add("d-none");
+    interOptions.classList.add("d-none");
+    genericInput.classList.add("d-none");
+    generalInput.classList.remove("d-none");
+
+    // Show options based on selection
+    if (selectedValue === "matric") {
+      matricOptions.classList.remove("d-none");
+    } else if (selectedValue === "inter") {
+      interOptions.classList.remove("d-none");
+    } else if (selectedValue === "other") {
+      genericInput.classList.remove("d-none");
+      generalInput.classList.add("d-none");
+    }
+  });
+
+  function showOtherBoardField() {
+    var select = document.getElementById("boardSelect");
+    var otherField = document.getElementById("otherBoardField");
+
+    if (select.value === "other_board") {
+      otherField.style.display = "block";
+    } else {
+      otherField.style.display = "none";
+    }
+  }
+</script>
+{% endblock inline_javascript %}

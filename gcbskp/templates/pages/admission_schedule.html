@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% load static i18n compress%} {% block content %}
+
+<section class="container py-5">
+  {% if schedules %}
+  <h1 class="heading">
+    <span class="border-bottom border-3 border-main">Ad</span>mission Schedule
+  </h1>
+  {% endif %}
+
+  {% for schedule in schedules %}
+  <div>
+    {% comment %} {% if schedule.status != 'Evening' %} {% endcomment %}
+    <h1 class="mt-5 text-second">
+      <span class="border-bottom border-3 border-main"
+        >{{ schedule.title }}</span
+      >
+    </h1>
+    {% comment %} {% endif %} {% endcomment %}
+    <h3 class="text-center border-bottom border-main border-top my-4">
+      {{ schedule.status }}
+    </h3>
+
+    <table class="table table-striped mt-4">
+      <thead class="border-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Details</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ schedule.admission_detail }}</td>
+          <td>{{ schedule.created_at|date:"d-M-Y" }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% comment %} {% if schedule.note %} {% if forloop.counter|divisibleby:2 %}  {% endcomment %}
+    <div>{{ schedule.note|safe }}</div>
+    {% comment %} {% endif %} {% endcomment %}
+     {% comment %} {% endif %} {% endcomment %}
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

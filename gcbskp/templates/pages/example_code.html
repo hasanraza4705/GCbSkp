@@ -1,0 +1,256 @@
+{% load static i18n compress %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+ <head>
+   <meta charset="utf-8" />
+   <meta http-equiv="x-ua-compatible" content="ie=edge" />
+   <title>{% block title %} GCB_SKP {% endblock title %}</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="description" content="colg website" />
+   <meta name="author" content="Memoona" />
+   <link rel="icon" href="{% static 'images/favicons/mini-logo.png' %}" />
+   {% block css %}
+
+   <link
+     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+     rel="stylesheet"
+   />
+   <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+   />
+   <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
+   <link rel="icon" href="images/mini-logo.png" type="image/icon type" />
+   {% endblock css %}
+   
+</head>
+<body class="{% block bodyclass %}{% endblock bodyclass %}">
+  
+ {% block content %}
+
+<div class="container mt-4">
+ <h2>Application Form</h2>
+ <hr />
+ <h4>Personal Information</h4>
+ <div class="row">
+   <div class="col-4">
+     
+       <strong>Name:</strong><br />
+       {{ student.name }}
+     
+   </div>
+   <div class="col-4">
+     
+       <strong>Cnic No:</strong><br />
+       {{ student.cnic_no }}
+     
+   </div>
+   <div class="col-4">
+     <p>
+       <strong>Date of Birth:</strong><br />
+       {{ student.date_of_birth }}
+     </p>
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>Mobile No:</strong><br />
+           {{ student.mobile_no }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Email:</strong><br />
+           {{ student.email }}
+         </p>
+   </div>
+   <div class="col-4">
+       {% comment %} <p>
+           <strong>Father Name:</strong><br />
+           {{ student.father_name }}
+         </p> {% endcomment %}
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>Father Name:</strong><br />
+           {{ student.father_name }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Father Cnic:</strong><br />
+           {{ student.father_cnic }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Father Mobile:</strong><br />
+           {{ student.father_mobile_no }}
+         </p>
+   </div>
+ </div>
+
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>Father Occupation:</strong><br />
+           {{ student.father_occupation }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Guardian Name:</strong><br />
+           {{ student.guardian_name }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Guardian Cnic:</strong><br />
+           {{ student.guardian_cnic }}
+         </p>
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>Guardian No:</strong><br />
+           {{ student.guardian_conatact_no }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Nationality:</strong><br />
+           {{ student.nationality }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Province:</strong><br />
+           {{ student.province }}
+         </p>
+   </div>
+ </div>
+ <div class="row">
+  
+       <p>
+           <strong>Permanent Address:</strong><br />
+           {{ student.permanent_address }}
+         </p>
+ </div>
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>District:</strong><br />
+           {{ student.district }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Gender:</strong><br />
+           {{ student.gender }}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Religion:</strong><br />
+           {{ student.religion }}
+         </p>
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-4">
+       <p>
+           <strong>Hafiz Quran:</strong><br />
+           {% if student.hafiz_e_quran == False %}
+           No
+           {% else %}
+           Yes
+           {% endif %}
+         </p>
+   </div>
+   <div class="col-4">
+       <p>
+           <strong>Martial Status:</strong><br />
+           {{ student.marital_status }}
+         </p>
+   </div>
+   {% comment %} <div class="col-4">
+       <p>
+           <strong>Father Mobile:</strong><br />
+           {{ student.father_mobile_no }}
+         </p>
+   </div> {% endcomment %}
+ </div>
+
+ 
+
+ <!-- Form Data -->
+ <h4>Academic Information</h4>
+ 
+ {% for form in form_data %}
+ <div class="row">
+   <div class="col-4">
+       <p><strong>Class:</strong> {{ form.class_name }} ({{ form.year }})</p>
+ <p><strong>Board:</strong> {{ form.board }}</p>
+ <p>
+   <strong>Marks:</strong> {{ form.obtain_marks }}  {{ form.total_marks }}
+ </p>
+ <p><strong>Grade:</strong> {{ form.grade }}</p>
+   </div>
+ </div>
+
+ <!-- Subject Marks -->
+ <h5>Subjects</h5>
+ <ul>
+   {% for subject in subjects %}
+   <li>
+     {{ subject.subject_name }}: <strong>Obtain Marks: </strong> {{ subject.obtain_marks }} <strong> Total Marks: </strong> {{ subject.total_marks }}
+   </li>
+   {% endfor %}
+ </ul>
+ {% endfor %}
+
+ <h4>Application Details</h4>
+ <p><strong>Program:</strong> {{ application.program.heading }}</p>
+ <p>
+   <strong>Course Groups:</strong>
+   {% for group in application.course_groups.all %}
+     {{ group.name }}{% if not forloop.last %}, {% endif %}
+   {% endfor %}
+ </p>
+ <p><strong>Prospectus Fee:</strong> {{ application.prospectus_fee }}</p>
+ <p><strong>Applied Date:</strong> {{ application.applied_date }}</p>
+
+ <div class="mt-4">
+   <a
+     href="{% url 'customAdmin:download_pdf' user_id=student.user_id %}"
+     class="btn btn-primary"
+     >Download PDF</a
+   >
+   <button onclick="window.print()" class="btn btn-secondary">Print</button>
+ </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+<!-- Your stuff: Third-party javascript libraries go here -->
+
+<!-- place project specific Javascript in this file -->
+
+{% compress js %}
+<script defer src="{% static 'js/project.js' %}"></script>
+{% endcompress %} {% endblock javascript %}
+</body>
+</html>

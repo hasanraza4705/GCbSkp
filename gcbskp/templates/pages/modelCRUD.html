@@ -1,0 +1,274 @@
+{% extends "base.html" %} {% load static i18n compress%} {% block content %}
+
+<div class="container my-5">
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'customAdmin:AddData' %}" method="post">
+            {% csrf_token %}
+            <div class="was-validated">
+              <div class="form-row">
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample03"
+                    >class</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample03"
+                    placeholder="Class"
+                    name="class_name"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Class.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample04"
+                    >Year</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample04"
+                    placeholder="Year"
+                    name="year"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Year.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample03"
+                    >Board</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample03"
+                    placeholder="Board"
+                    name="board"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Board.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample04"
+                    >Obtain Marks</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample04"
+                    placeholder="Obtain Marks"
+                    name="obtain_marks"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Obtain Marks.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample03"
+                    >Total Marks</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample03"
+                    placeholder="Total Marks"
+                    name="total_marks"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Totao marks.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample04"
+                    >Grade</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample04"
+                    placeholder="Grade"
+                    name="grade"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Grade.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Class Name</th>
+        <th scope="col">Year</th>
+        <th scope="col">Board</th>
+        <th scope="col">Obtain Marks</th>
+        <th scope="col">Total Marks</th>
+        <th scope="col">Grade</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in formData %}
+      <tr>
+        <th scope="row">{{ data.id }}</th>
+        <td>{{ data.class_name }}</td>
+        <td>{{ data.year }}</td>
+        <td>{{ data.board }}</td>
+        <td>{{ data.obtain_marks }}</td>
+        <td>{{ data.total_marks }}</td>
+        <td>{{ data.grade }}</td>
+        <td>
+          <a href="#editEmployeeModal-{{ forloop.counter }}" class="edit" data-bs-toggle="modal" ><i class="fa-regular fa-pen-to-square"></i></a>
+          <a href="#deleteEmployeeModal-{{ forloop.counter }}" class="delete" data-toggle="modal"><i class="fa-solid fa-delete-left"></i></a>
+        </td>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Edit Modal HTML -->
+{% for data in formData %}
+<div id="editEmployeeModal-{{ forloop.counter }}" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{% url 'customAdmin:Update'  data.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden"  id="recordId" name="record_id">
+        <div class="modal-header">						
+          <h4 class="modal-title" id="editModalLabel">Edit Record</h4>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Class</label>
+            <input type="text" value="{{ data.class_name }}" class="form-control" id="editClassName" name="class_name" required>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="text" value="{{ data.year }}" class="form-control" id="editYear" name="year" required>
+          </div>
+          <div class="form-group">
+            <label>Board</label>
+            <input type="text" value="{{ data.board }}" class="form-control" id="editBoard" name="board" required>
+          </div>
+          <div class="form-group">
+            <label>Obtain Marks</label>
+            <input type="text" value="{{ data.obtain_marks }}" class="form-control" id="editObtainMarks" name="obtain_marks" required>
+          </div>
+          <div class="form-group">
+            <label>Total Marks</label>
+            <input type="text" value="{{ data.total_marks }}" class="form-control" id="editTotalMarks" name="total_marks" required>
+          </div>
+          <div class="form-group">
+            <label>Grade</label>
+            <input type="text"  value="{{ data.grade }}" class="form-control" id="editGrade" name="grade" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Cancel">
+          <input type="submit" class="btn btn-info" value="Update">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% for data in formData %}
+<!-- Delete Modal -->
+<div id="deleteEmployeeModal-{{ forloop.counter }}" class="modal fade" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{% url 'customAdmin:Delete' data.id %}" method="post">
+        {% csrf_token %}
+        <div class="modal-header">						
+          <h4 class="modal-title">Delete Employee</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">					
+          <p>Are you sure you want to delete these records?</p>
+          <p class="text-warning"><small>This action cannot be undone.</small></p>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+          <input type="submit" class="btn btn-danger" value="Delete">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static i18n compress%}
+
+{% block content %}
+
+ <!-- hero section start -->
+<section class="about-hero">
+    <div class="overlay py-5">
+        <div class="container">
+            <h1 class="heading"> <span class="border-bottom border-3 border-main">Ab</span>out</h1>
+            {% for about in about_details %}
+            <p class="mt-4 fw-light" style="letter-spacing: 0.01cm;">
+                {{ about.description|safe }}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- hero section end -->
+
+<!-- team member section start -->
+<section class="py-5 container about-team">
+    <h1 class="heading"> <span class="border-bottom border-3 border-main">Te</span>am Member</h1>
+    <div class="slide-container swiper mt-4">
+        <div class="slide-content">
+            <div class="swiper-wrapper">
+                {% for member in team_members %}
+                <div class="swiper-slide">
+                    <div class="d-flex justify-content-center cards">
+                        <div class="cards-content">
+                            <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                            <div class="card-details text-white text-center py-2">
+                                <p class="fs-4 text-capitalize">{{ member.name }}</p>
+                                <i class="fw-light text-main">{{ member.position }}</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="swiper-button-next swiper-navBtn"></div>
+        <div class="swiper-button-prev swiper-navBtn"></div>
+    </div> 
+</section>
+<!-- team member section end -->
+
+
+{% endblock %} 

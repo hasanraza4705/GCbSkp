@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static i18n compress%}
+
+{% block content %}
+<section class="container py-5">
+    {% comment %} <h1 class="heading"><span class="border-bottom border-3 border-main">Ad</span>mission Policy</h1> {% endcomment %}
+
+    {% for detail in admissionQuota %}
+        <h1 class="border-bottom w-max border-main mt-3">{{ detail.title }}</h1>
+        <div class="content mt-2">
+            {{ detail.details|safe }}
+        </div>
+    {% endfor %}
+
+    <h1 class="mt-5"><span class="border-2 border-bottom border-main">Intermediate (Morning)</span></h1>
+    
+    <div class="container">
+        {% for detail in admission_details %}
+            {% if detail.status == 'Morning' %}
+                <h4 class="mt-4">
+                    <span class="border-2 border-bottom border-main">{{ detail.program.name }}</span> 
+                    {{ detail.coursegroup_id.name }}
+                </h4>
+                {{ detail.description|safe }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <h1 class="mt-5"><span class="border-2 border-bottom border-main">Intermediate (Evening)</span></h1>
+
+    <div class="container">
+        {% for detail in admission_details %}
+            {% if detail.status == 'Evening' %}
+                <h4 class="mt-4">
+                    <span class="border-2 border-bottom border-main">{{ detail.program.name }}</span> 
+                    {{ detail.coursegroup_id.name }}
+                </h4>
+               {{ detail.description|safe }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <h1 class="mt-5"><span class="border-2 border-bottom border-main">Associate Degree Program (Commerce)</span></h1>
+
+    <div class="container">
+        {% for detail in admission_details %}
+            {% if detail.status == 'General' %}
+                <h4 class="mt-4">
+                    <span class="border-2 border-bottom border-main">{{ detail.program.name }}</span> 
+                    {{ detail.coursegroup_id.name }}
+                </h4>
+                {{ detail.description|safe }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Additional static content can go here if needed -->
+</section>
+
+{% endblock %} 

@@ -1,0 +1,115 @@
+{% load static i18n compress %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>
+      {% block title %} Online Admission Portal {% endblock title %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Online Admission Portal" />
+    <meta name="author" content="Muqadas" />
+    <link rel="icon" href="{% static 'images/favicons/mini-logo.png' %}" />
+
+    {% block css %}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
+    />
+
+    {% compress css %}
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    {% endcompress %} {% endblock css %}
+  </head>
+  <body class="{% block bodyclass %}{% endblock bodyclass %}">
+    {% block body %}
+    <div class="mb-1">
+      <nav class="px-md-4 navbar navbar-expand-lg bg-light shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'online_admission:dashboard' %}">
+            <h4>College Admission Portal </h4>
+          </a>
+          <button
+            class="navbar-toggler border-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="collapse navbar-collapse justify-content-end"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav">
+              {% comment %} <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{% url 'offered_program:show_page_program' %}"
+                  >Offered Program</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{% url 'course_group:GetProgram' %}"
+                  >Course</a
+                >
+              </li> {% endcomment %}
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{% url 'online_admission:instruction_list' %}"
+                  >Add Instruction</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{% url 'online_admission:studentList' %}"
+                  >Student List</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{% url 'student-details:promotedStudent' %}"
+                  >Promoted Student</a
+                >
+              </li>
+              <form action="{% url 'online_admission:admin_logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+              </form>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    {% block main %} {% block content %} {% endblock content %} {% endblock main%} {% endblock body %} {% block modal %}{% endblock modal %} 
+    {% block inline_javascript %}{% endblock inline_javascript %}
+     {% block javascript %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    {% compress js %}
+    <script defer src="{% static 'js/project.js' %}"></script>
+    {% endcompress %} {% endblock javascript %}
+  </body>
+</html>

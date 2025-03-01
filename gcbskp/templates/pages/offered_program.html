@@ -1,0 +1,131 @@
+{% extends "base_admin.html" %} {% load static i18n compress%} {% block content %}
+
+<div class="container my-5">
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    Add Offered Program 
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Program</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'offered_program:add_programs' %}" method="post">
+            {% csrf_token %}
+            <div class="was-validated">
+              <div class="form-row">
+                <div class="col-12 col-md-6 mb-3">
+                  <label class="form-label" for="validationSample03"
+                    >Program Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationSample03"
+                    placeholder="Program Name"
+                    name="program_name"
+                    required=""
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid Name.
+                  </div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-4">
+  <table id="programTable" class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Program Name</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in programData %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ data.heading }}</td>
+        
+        <td>
+          <a href="#editProgramModel-{{ forloop.counter }}" class="edit" data-bs-toggle="modal" ><i class="fa-regular fa-pen-to-square"></i></a>
+        </td>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Edit Modal HTML -->
+{% for data in programData %}
+<div id="editProgramModel-{{ forloop.counter }}" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{% url 'offered_program:update_program'  data.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden"  id="recordId" name="record_id">
+        <div class="modal-header">						
+          <h4 class="modal-title" id="editModalLabel">Edit Program</h4>
+          <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Program</label>
+            <input type="text" value="{{ data.heading }}" class="form-control" id="editClassName" name="program_name" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Cancel">
+          <input type="submit" class="btn btn-primary" value="Update">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block inline_javascript %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var table = new DataTable('#programTable'); 
+    // Initialize DataTables with vanilla JS
+});
+</script>
+{% endblock inline_javascript %}

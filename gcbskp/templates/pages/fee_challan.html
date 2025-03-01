@@ -1,0 +1,245 @@
+{% load static i18n compress %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+ <head>
+   <meta charset="utf-8" />
+   <meta http-equiv="x-ua-compatible" content="ie=edge" />
+   <title>{% block title %} GCB_SKP {% endblock title %}</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="description" content="colg website" />
+   <meta name="author" content="Memoona" />
+   <link rel="icon" href="{% static 'images/favicons/mini-logo.png' %}" />
+   {% block css %}
+
+   <link
+     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+     rel="stylesheet"
+   />
+   <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+   />
+   <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
+   <link rel="icon" href="images/mini-logo.png" type="image/icon type" />
+   {% compress css %}
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    <style>
+        .btn{
+        background-color: #1c87c9;
+        -webkit-border-radius: 60px;
+        border-radius: 60px;
+        border: none;
+        color: #eeeeee;
+        cursor: pointer;
+        display: inline-block;
+        font-family: sans-serif;
+        font-size: 20px;
+        padding: 5px 15px;
+        text-align: center;
+        text-decoration: none;
+      }
+      @keyframes glowing {
+        0% {
+          background-color: #2ba805;
+          box-shadow: 0 0 5px #2ba805;
+        }
+        50% {
+          background-color: #49e819;
+          box-shadow: 0 0 20px #49e819;
+        }
+        100% {
+          background-color: #2ba805;
+          box-shadow: 0 0 5px #2ba805;
+        }
+      }
+      .btn{
+        animation: glowing 1300ms infinite;
+      }
+      @media print {
+          .print {
+              display: none;
+          }
+      }
+    </style>
+    {% endcompress %} 
+   {% endblock css %}
+   
+</head>
+<body class="{% block bodyclass %}{% endblock bodyclass %}">
+  
+ {% block content %}
+
+<div class="container mt-2 bg-light ">
+    <div class="row print">
+        <div class="col">
+            <button type="submit" class="btn print mb-2 " onclick="window.print()" style="margin-top: 10px;">
+                Print Form
+            </button>
+        </div>
+        <div class="col">
+            <a href="{% url 'online_admission:studentApplicationView' user_id%}" class="btn btn-primary mb-2">Back To Application Form</a>
+
+        </div>
+
+    </div>
+    <div class="row">
+        <!-- Office Copy -->
+       
+        <div class="col-md-4 border p-3">
+            <div class="row mb-1">
+                <div class="col-2">
+                    <img src="{% static 'images/favicons/mini-logo.png' %}" width="50px" height="50px" alt="College Logo" >
+                    <p class="font-weight-bold">Office Copy</p>
+                </div>
+                <div class="col-8 text-center">
+                    <h4>Govt Graduate College Civil Line</h4>
+                    <h6>Sheikhupura | Phone Number</h6>
+                <!-- </div>
+                <div class="col-sm-4 text-right"> -->
+            </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="small-space"><strong>Payment Date:</strong> {{fee.date}}</p>
+                <p class="small-space"><strong>Receipt ID:</strong> {{student.id}}</p>
+                <!-- <p class="small-space"><strong>Operator:</strong> {{user}}</p> -->
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <p><strong>Student Name:</strong> {{student.name}}</p>
+                    <p><strong>Father Name:</strong> {{student.father_name}}</p>
+                    <p><strong>Program:</strong> {{application.program.heading}}</p>
+                    <p><strong>Courses:</strong> {% for group in application.course_groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    <p><strong>Application Date:</strong> {{application.applied_date}}</p>
+                    <p><strong> Prospectus Fee:</strong>{{ application.prospectus_fee }}</p>
+                </div>
+           
+        </div>
+        <div class="text-left mt-2">
+            <p><strong class="">STAMP</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+        <div class=" mt-2">
+            <p><strong class="">Signature</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+       
+        </div>
+
+        <div class="col-md-4 border p-3">
+            <div class="row mb-1">
+                <div class="col-2">
+                    <img src="{% static 'images/favicons/mini-logo.png' %}" width="50px" height="50px" alt="College Logo" >
+                    <p class="font-weight-bold">Student Copy</p>
+                </div>
+                <div class="col-8 text-center">
+                    <h4>Govt Graduate College Civil Line</h4>
+                    <h6>Sheikhupura | Phone Number</h6>
+                <!-- </div>
+                <div class="col-sm-4 text-right"> -->
+            </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="small-space"><strong>Payment Date:</strong> {{fee.date}}</p>
+                <p class="small-space"><strong>Receipt ID:</strong> {{student.id}}</p>
+                <!-- <p class="small-space"><strong>Operator:</strong> {{user}}</p> -->
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <p><strong>Student Name:</strong> {{student.name}}</p>
+                    <p><strong>Father Name:</strong> {{student.father_name}}</p>
+                    <p><strong>Program:</strong> {{application.program.heading}}</p>
+                    <p><strong>Courses:</strong> {% for group in application.course_groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    <p><strong>Application Date:</strong> {{application.applied_date}}</p>
+                    <p><strong> Prospectus Fee:</strong>{{ application.prospectus_fee }}</p>
+                </div>
+           
+        </div>
+        <div class="text-left mt-2">
+            <p><strong class="">STAMP</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+        <div class=" mt-2">
+            <p><strong class="">Signature</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+        
+        </div>
+
+        
+        <div class="col-md-4 border p-3">
+            <div class="row mb-1">
+                <div class="col-2">
+                    <img src="{% static 'images/favicons/mini-logo.png' %}" width="50px" height="50px" alt="College Logo" >
+                    <p class="font-weight-bold">Bank Copy</p>
+                </div>
+                <div class="col-8 text-center">
+                    <h4>Govt Graduate College Civil Line</h4>
+                    <h6>Sheikhupura | Phone Number</h6>
+                <!-- </div>
+                <div class="col-sm-4 text-right"> -->
+            </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="small-space"><strong>Payment Date:</strong> {{fee.date}}</p>
+                <p class="small-space"><strong>Receipt ID:</strong> {{student.id}}</p>
+                <!-- <p class="small-space"><strong>Operator:</strong> {{user}}</p> -->
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <p><strong>Student Name:</strong> {{student.name}}</p>
+                    <p><strong>Father Name:</strong> {{student.father_name}}</p>
+                    <p><strong>Program:</strong> {{application.program.heading}}</p>
+                    <p><strong>Courses:</strong> {% for group in application.course_groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    <p><strong>Application Date:</strong> {{application.applied_date}}</p>
+                    <p><strong> Prospectus Fee:</strong>{{ application.prospectus_fee }}</p>
+                </div>
+           
+        </div>
+        <div class="text-left mt-2">
+            <p><strong class="">STAMP</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+        <div class=" mt-2">
+            <p><strong class="">Signature</strong></p>
+           
+            <div class="col-8" style="border-bottom: 1px solid #000;"></div>
+        </div>
+        
+        </div>
+        
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+<!-- Your stuff: Third-party javascript libraries go here -->
+
+<!-- place project specific Javascript in this file -->
+
+{% compress js %}
+<script defer src="{% static 'js/project.js' %}"></script>
+{% endcompress %} {% endblock javascript %}
+</body>
+</html>

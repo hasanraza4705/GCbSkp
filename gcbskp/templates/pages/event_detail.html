@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static i18n compress %}
+
+{% block content %}
+
+<!-- event_details.html -->
+<section class="container py-5">
+    <h1> <i class="fa-solid fa-minus text-main"></i><span> </span>{{ event.event_title }}</h1> 
+
+    <p class="mt-2">{{ event.description|safe }}</p>
+
+    <div class="container mt-2">
+        <div class="row justify-content-around row-gap-4 columns-gap-4">
+            {% for item in event_items %}
+                <div class="col-12">
+                    <p>{{ item.description|safe }}</p>
+                </div>
+                {% for image in item.images.all %}
+                    <div class="col-lg-6">
+                        <img src="{{ image.image.url }}" alt="{{ image.image.name }}" class="w-100">
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
