@@ -229,7 +229,10 @@ def generate_merit_list(request):
                 # Retrieve FormData based on the application ID (not class_name)
                 form_data = AcademicRecord.objects.filter(user_id=app.user_id)
                 print(f"Form Data: {form_data}")
-
+                
+                if not form_data.exists():
+                    print(f"No academic record found for user ID: {app.user_id}")
+                    continue  # Skip this student and move to the next one
                 if form_data.exists():
                     # Initialize variables for obtained marks and totals
                     matric_obtained = 0
@@ -241,6 +244,14 @@ def generate_merit_list(request):
 
                     # Iterate through the form data and calculate merit based on available data
                     for data in form_data:
+                        if data is None:
+                            print(f"Skipping a NoneType entry for user ID: {app.user_id}")
+                            continue  # Skip this iteration if data is None
+    
+                        if not hasattr(data, 'class_name') or data.class_name is None:
+                            print(f"Academic record missing class_name for user ID: {app.user_id}")
+                            continue  # Skip entries where class_name is missing
+
                         if data.class_name in ['Matric Science', 'Matric Arts', '0 Level']:
                             # Matriculation Data
                             matric_obtained = data.obtain_marks
@@ -361,9 +372,9 @@ def generate_merit_list(request):
                     matric_data.total_marks if matric_data else '',  # Matric total marks
                     inter_data.obtain_marks if inter_data else '',  # Intermediate obtained marks
                     inter_data.total_marks if inter_data else '',  # Intermediate total marks
-                    inter_data.class_name,
-                    inter_data.year,
-                    inter_data.board,
+                    inter_data.class_name if inter_data else '',
+                    inter_data.year if inter_data else '',
+                    inter_data.board if inter_data else '',
                     item['merit']
                 ])   
            
@@ -400,8 +411,6 @@ def generate_merit_list(request):
         return response
 
     return redirect('online_admission:dashboard')
-
-
 
 
 

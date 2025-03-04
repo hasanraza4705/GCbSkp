@@ -63,7 +63,7 @@ def login_view(request):
                 if check_password(password,student.password):
                     request.session['user_id'] = student.id
                     request.session['Name'] = student.Name
-                    return redirect('home')
+                    return redirect('online_admission:apply_view')
                 else:
                     form.add_error(None,'Invalid data')
             except RegisteredStudent.DoesNotExist:
